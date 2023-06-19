@@ -1,0 +1,1 @@
+const { Friendship } = require("../models");
