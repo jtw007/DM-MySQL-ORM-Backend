@@ -1,4 +1,4 @@
-const { User, Friend } = require("../models");
+const { User, FriendRequest } = require("../models");
 
 const FriendController = {
   // Function to create a new friendship
@@ -19,12 +19,17 @@ const FriendController = {
         });
       }
 
-      const friend = await Friend.create({
-        userId: req.body.userId,
-        friendId: req.body.friendId,
-      });
+      // Find the user who sent the friend request
+      const fromUser = await User.findByPk(req.body.userId);
 
-      res.json(friend);
+      // Find the user who accepted the friend request
+      const toUser = await User.findByPk(req.body.friendId);
+
+      // Create friendships in both directions
+      await fromUser.addFriend(toUser);
+      await toUser.addFriend(fromUser);
+
+      res.json({ message: "Friendship created successfully" });
     } catch (err) {
       res.status(500).json(err);
     }
@@ -48,14 +53,17 @@ const FriendController = {
         });
       }
 
-      const friend = await Friend.destroy({
-        where: {
-          userId: req.params.userId,
-          friendId: req.params.friendId,
-        },
-      });
+      // Find the user who sent the friend request
+      const fromUser = await User.findByPk(req.params.userId);
 
-      res.json(friend);
+      // Find the user who accepted the friend request
+      const toUser = await User.findByPk(req.params.friendId);
+
+      // Remove friendships in both directions
+      await fromUser.removeFriend(toUser);
+      await toUser.removeFriend(fromUser);
+
+      res.json({ message: "Friendship deleted successfully" });
     } catch (err) {
       res.status(500).json(err);
     }

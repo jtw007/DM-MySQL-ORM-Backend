@@ -16,6 +16,7 @@ const FriendRequestController = {
         });
       });
   },
+
   // Accept a friend request
   acceptFriendRequest(req, res) {
     FriendRequest.findOne({
@@ -35,30 +36,26 @@ const FriendRequestController = {
             .status(400)
             .json({ message: "This friend request is not pending" });
         }
-        // Create friendship in both directions
-        return User.findByPk(friendRequest.fromUserId)
-          .then((user) => user.addFriend(req.user))
-          .then(() => req.user.addFriend(friendRequest.fromUserId))
-          .then(() => friendRequest.update({ status: "accepted" }))
-          .then(() => res.json({ message: "Friend request accepted" }))
-          .catch((err) => {
-            console.error(err);
-            res
-              .status(500)
-              .json({
-                message: "Error accepting friend request",
-                error: err.message,
-              });
+
+        // Find the user who sent the friend request
+        return User.findByPk(friendRequest.fromUserId).then((fromUser) => {
+          // Find the user who is currently logged in
+          return User.findByPk(req.user.id).then((toUser) => {
+            // Create friendships in both directions
+            return fromUser
+              .addFriend(toUser)
+              .then(() => toUser.addFriend(fromUser))
+              .then(() => friendRequest.update({ status: "accepted" }))
+              .then(() => res.json({ message: "Friend request accepted" }));
           });
+        });
       })
       .catch((err) => {
         console.error(err);
-        res
-          .status(500)
-          .json({
-            message: "Error finding friend request",
-            error: err.message,
-          });
+        res.status(500).json({
+          message: "Error finding friend request",
+          error: err.message,
+        });
       });
   },
 
