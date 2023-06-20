@@ -10,12 +10,10 @@ const FriendRequestController = {
       .then((friendRequest) => res.json(friendRequest))
       .catch((err) => {
         console.error(err);
-        res
-          .status(500)
-          .json({
-            message: "Error creating friend request",
-            error: err.message,
-          });
+        res.status(500).json({
+          message: "Error creating friend request",
+          error: err.message,
+        });
       });
   },
   // Accept a friend request
@@ -31,6 +29,11 @@ const FriendRequestController = {
           return res
             .status(404)
             .json({ message: "No friend request found with this id" });
+        }
+        if (friendRequest.status !== "pending") {
+          return res
+            .status(400)
+            .json({ message: "This friend request is not pending" });
         }
         // Create friendship in both directions
         return User.findByPk(friendRequest.fromUserId)
@@ -77,12 +80,10 @@ const FriendRequestController = {
       })
       .catch((err) => {
         console.error(err);
-        res
-          .status(500)
-          .json({
-            message: "Error rejecting friend request",
-            error: err.message,
-          });
+        res.status(500).json({
+          message: "Error rejecting friend request",
+          error: err.message,
+        });
       });
   },
 };
