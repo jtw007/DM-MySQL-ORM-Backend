@@ -1,5 +1,5 @@
 const Sequelize = require("sequelize");
-require("dotenv").config({ path: "../.env" });
+require("dotenv").config();
 
 const sequelize = new Sequelize(
   process.env.DB_NAME,
@@ -11,9 +11,5 @@ const sequelize = new Sequelize(
     port: 3306,
   }
 );
-
-// console.log(process.env.DB_NAME);
-// console.log(process.env.DB_USER);
-// console.log(process.env.DB_PASSWORD);
 
 module.exports = sequelize;
