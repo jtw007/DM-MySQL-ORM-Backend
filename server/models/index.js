@@ -1,4 +1,3 @@
-// server/models/index.js
 const User = require("./User");
 const Friend = require("./Friend");
 const FriendRequest = require("./FriendRequest");
