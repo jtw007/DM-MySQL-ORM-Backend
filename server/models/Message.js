@@ -1,11 +1,20 @@
 const { Model, DataTypes } = require("sequelize");
 const sequelize = require("../config/connection");
 
-class Friend extends Model {}
+class Message extends Model {}
 
-Friend.init(
+Message.init(
   {
-    userId: {
+    id: {
+      type: DataTypes.UUID,
+      defaultValue: DataTypes.UUIDV4,
+      primaryKey: true,
+    },
+    content: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    fromUserId: {
       type: DataTypes.UUID,
       allowNull: false,
       references: {
@@ -13,7 +22,7 @@ Friend.init(
         key: "id",
       },
     },
-    friendId: {
+    toUserId: {
       type: DataTypes.UUID,
       allowNull: false,
       references: {
@@ -24,8 +33,8 @@ Friend.init(
   },
   {
     sequelize,
-    modelName: "friend",
+    modelName: "message",
   }
 );
 
-module.exports = Friend;
+module.exports = Message;
