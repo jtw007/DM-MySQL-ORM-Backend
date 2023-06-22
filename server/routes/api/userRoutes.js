@@ -1,5 +1,6 @@
 const router = require("express").Router();
 const UserController = require("../../controllers/UserController");
+const { authMiddleware } = require("../../utils/auth");
 
 router.route("/login").post(UserController.login);
 
@@ -9,9 +10,9 @@ router
   .post(UserController.createUser);
 
 router
-  .route("/:id")
-  .get(UserController.getUserById)
-  .put(UserController.updateUser)
-  .delete(UserController.deleteUser);
+  .route("/me")
+  .get(authMiddleware, UserController.getMyProfile)
+  .put(authMiddleware, UserController.updateMyProfile)
+  .delete(authMiddleware, UserController.deleteUser);
 
 module.exports = router;

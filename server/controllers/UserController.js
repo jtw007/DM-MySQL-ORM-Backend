@@ -43,11 +43,11 @@ const UserController = {
       });
   },
 
-  // Get a user by id
-  getUserById(req, res) {
+  // Get current user's profile
+  getMyProfile(req, res) {
     User.findOne({
       where: {
-        id: req.params.id,
+        id: req.user.id,
       },
     })
       .then((dbUserData) => {
@@ -55,13 +55,18 @@ const UserController = {
           res.status(404).json({ message: "No user found with this id" });
           return;
         }
-        res.json(dbUserData);
+        // Get the friends count
+        dbUserData.getFriends().then((friends) => {
+          dbUserData.dataValues.friendsCount = friends.length;
+          res.json(dbUserData);
+        });
       })
       .catch((err) => {
         console.log(err);
-        res.stats(500).json(err);
+        res.status(500).json(err);
       });
   },
+
   // Create a new user
   createUser(req, res) {
     User.create(req.body)
@@ -74,11 +79,11 @@ const UserController = {
       });
   },
 
-  // Update a user by id
-  updateUser(req, res) {
+  // Update current user's profile
+  updateMyProfile(req, res) {
     User.update(req.body, {
       where: {
-        id: req.params.id,
+        id: req.user.id,
       },
     })
       .then((dbUserData) => {
@@ -93,11 +98,11 @@ const UserController = {
       });
   },
 
-  // Delete a user
+  // Delete user
   deleteUser(req, res) {
     User.destroy({
       where: {
-        id: req.params.id,
+        id: req.user.id,
       },
     })
       .then((dbUserData) => {
