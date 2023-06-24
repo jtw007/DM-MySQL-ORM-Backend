@@ -1,6 +1,7 @@
 const { GroupChat, GroupUser, GroupMessage } = require("../models");
 
 const groupController = {
+  // Create a new group
   createGroup: async (req, res) => {
     try {
       const group = await GroupChat.create({
@@ -32,6 +33,7 @@ const groupController = {
       res.status(500).json(err);
     }
   },
+  // Checks if a user is in a group
   checkUserInGroup: async (req, res) => {
     try {
       const group = await GroupChat.findByPk(req.params.groupId);
@@ -59,7 +61,7 @@ const groupController = {
       res.status(500).json(err);
     }
   },
-
+  // Get all groups for a user
   createGroupMessage: async (req, res) => {
     try {
       // check if the user is part of the group
@@ -85,7 +87,7 @@ const groupController = {
       res.status(500).json(err);
     }
   },
-
+  // Get all group messages from a user
   getGroupMessages: async (req, res) => {
     try {
       // check if the user is part of the group
@@ -108,10 +110,13 @@ const groupController = {
       res.status(500).json(err);
     }
   },
-
+  // Allows group members to invite other users to the group
   inviteUsers: async (req, res) => {
     try {
-      const { invitees, groupId } = req.body;
+      const { invitees } = req.body; // Extract invitees from the request body
+      const { groupId } = req.params; // Extract groupId from the route parameters
+
+      // Check if the requester is a member of the group
       const groupUser = await GroupUser.findOne({
         where: {
           groupId: groupId,
@@ -122,6 +127,8 @@ const groupController = {
       if (!groupUser) {
         return res.status(403).json({ message: "Not authorized" });
       }
+
+      // Iterate through the invitees array
       for (let inviteeId of invitees) {
         const alreadyInvited = await GroupUser.findOne({
           where: {
@@ -129,13 +136,17 @@ const groupController = {
             userId: inviteeId,
           },
         });
-        if (alreadyInvited) continue; // Do not invite already invited users
+        // Skip if the user is already invited or a member
+        if (alreadyInvited) continue;
+
+        // Create a new invitation for the user
         await GroupUser.create({
           userId: inviteeId,
           groupId: groupId,
           status: "PENDING",
         });
       }
+
       res.json({ message: "Invitations sent" });
     } catch (err) {
       console.error(err);
@@ -143,6 +154,7 @@ const groupController = {
     }
   },
 
+  // Aceept a group invitation
   acceptInvitation: async (req, res) => {
     try {
       const { groupId } = req.params;
@@ -165,9 +177,10 @@ const groupController = {
     }
   },
 
+  // Decline a group invitation
   declineInvitation: async (req, res) => {
     try {
-      const { groupId } = req.body;
+      const { groupId } = req.params;
       const invitation = await GroupUser.findOne({
         where: {
           groupId: groupId,
