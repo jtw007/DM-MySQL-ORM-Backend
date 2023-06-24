@@ -2,7 +2,6 @@ const router = require("express").Router();
 const { authMiddleware } = require("../../utils/auth");
 const {
   createGroup,
-  checkUserInGroup,
   createGroupMessage,
   getGroupMessages,
   inviteUsers,
@@ -11,8 +10,6 @@ const {
 } = require("../../controllers/GroupController");
 
 router.route("/").post(authMiddleware, createGroup);
-
-router.route("/:groupId").post(authMiddleware, checkUserInGroup);
 
 router
   .route("/:groupId/messages")

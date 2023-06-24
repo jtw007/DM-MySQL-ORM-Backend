@@ -33,34 +33,6 @@ const groupController = {
       res.status(500).json(err);
     }
   },
-  // Checks if a user is in a group
-  checkUserInGroup: async (req, res) => {
-    try {
-      const group = await GroupChat.findByPk(req.params.groupId);
-
-      if (group.creatorId !== req.user.id) {
-        return res.status(403).json({ message: "Not authorized" });
-      }
-
-      // assuming the user is stored in req.user
-      const groupUser = await GroupUser.findOne({
-        where: {
-          userId: req.user.id,
-          groupId: req.params.groupId,
-          status: "ACCEPTED",
-        },
-      });
-
-      if (!groupUser) {
-        return res.status(404).json({ message: "User not found in the group" });
-      }
-
-      res.json(groupUser);
-    } catch (err) {
-      console.error(err);
-      res.status(500).json(err);
-    }
-  },
   // Get all groups for a user
   createGroupMessage: async (req, res) => {
     try {
