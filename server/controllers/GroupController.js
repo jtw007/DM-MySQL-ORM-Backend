@@ -145,7 +145,7 @@ const groupController = {
 
   acceptInvitation: async (req, res) => {
     try {
-      const { groupId } = req.body;
+      const { groupId } = req.params;
       const invitation = await GroupUser.findOne({
         where: {
           groupId: groupId,
