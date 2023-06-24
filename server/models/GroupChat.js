@@ -22,9 +22,9 @@ GroupChat.init(
   },
   {
     sequelize,
-    freezeTableName: true,
     underscored: true,
     modelName: "groupChat",
+    tableName: "group_chats",
   }
 );
 

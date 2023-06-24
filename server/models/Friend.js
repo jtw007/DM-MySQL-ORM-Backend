@@ -25,6 +25,7 @@ Friend.init(
   {
     sequelize,
     modelName: "friend",
+    underscored: true,
   }
 );
 

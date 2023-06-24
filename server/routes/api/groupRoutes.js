@@ -22,7 +22,7 @@ router
 router.route("/:groupId/invite").post(authMiddleware, inviteUsers);
 
 router
-  .route("/:groudId/invitation/accept")
+  .route("/:groupId/invitation/accept")
   .post(authMiddleware, acceptInvitation);
 
 router

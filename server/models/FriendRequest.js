@@ -30,6 +30,7 @@ FriendRequest.init(
   {
     sequelize,
     modelName: "friendRequest",
+    underscored: true,
   }
 );
 

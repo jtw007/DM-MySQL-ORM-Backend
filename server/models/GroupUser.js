@@ -29,7 +29,6 @@ GroupUser.init(
   },
   {
     sequelize,
-    timestamps: true,
     underscored: true,
     modelName: "groupUser",
   }

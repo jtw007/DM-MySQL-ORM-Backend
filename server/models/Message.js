@@ -34,6 +34,7 @@ Message.init(
   {
     sequelize,
     modelName: "message",
+    underscored: true,
   }
 );
 

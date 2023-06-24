@@ -1,4 +1,4 @@
-const { GroupChat, User, GroupUser, GroupMessage } = require("../models");
+const { GroupChat, GroupUser, GroupMessage } = require("../models");
 
 const groupController = {
   createGroup: async (req, res) => {
@@ -34,16 +34,25 @@ const groupController = {
   },
   checkUserInGroup: async (req, res) => {
     try {
-      const group = await Group.findByPk(req.params.groupId);
+      const group = await GroupChat.findByPk(req.params.groupId);
 
       if (group.creatorId !== req.user.id) {
         return res.status(403).json({ message: "Not authorized" });
       }
+
+      // assuming the user is stored in req.user
       const groupUser = await GroupUser.findOne({
-        userId: req.params.userId,
-        groupId: req.params.groupId,
-        status: "ACCEPTED",
+        where: {
+          userId: req.user.id,
+          groupId: req.params.groupId,
+          status: "ACCEPTED",
+        },
       });
+
+      if (!groupUser) {
+        return res.status(404).json({ message: "User not found in the group" });
+      }
+
       res.json(groupUser);
     } catch (err) {
       console.error(err);

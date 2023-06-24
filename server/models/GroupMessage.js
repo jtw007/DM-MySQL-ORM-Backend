@@ -17,7 +17,7 @@ GroupMessage.init(
       type: DataTypes.UUID,
       allowNull: false,
       references: {
-        model: "groupChat",
+        model: "group_chats",
         key: "id",
       },
     },
@@ -28,7 +28,6 @@ GroupMessage.init(
   },
   {
     sequelize,
-    timestamps: true,
     underscored: true,
     modelName: "groupMessage",
   }
