@@ -69,6 +69,16 @@ User.hasMany(GroupMessage, {
   as: "groupMessages",
 });
 
+GroupMessage.belongsTo(User, {
+  foreignKey: "userId",
+  as: "fromUser",
+});
+
+GroupMessage.belongsTo(GroupChat, {
+  foreignKey: "groupId",
+  as: "groupChat",
+});
+
 module.exports = {
   User,
   FriendRequest,

@@ -1,4 +1,4 @@
-const { GroupChat, GroupUser, GroupMessage } = require("../models");
+const { GroupChat, GroupUser, GroupMessage, User } = require("../models");
 
 const groupController = {
   // Create a new group
@@ -33,7 +33,7 @@ const groupController = {
       res.status(500).json(err);
     }
   },
-  // Get all groups for a user
+  // Send a message to a group
   createGroupMessage: async (req, res) => {
     try {
       // check if the user is part of the group
@@ -60,25 +60,31 @@ const groupController = {
     }
   },
   // Get all group messages from a user
-  getGroupMessages: async (req, res) => {
+  getGroupContents: async (req, res) => {
     try {
-      // check if the user is part of the group
       const groupUser = await GroupUser.findOne({
         where: {
           groupId: req.params.groupId,
           userId: req.user.id,
         },
       });
-
       if (!groupUser) {
         return res.status(403).json({ message: "Not authorized" });
       }
-      const messages = await GroupMessage.findAll({
-        where: { groupId: req.params.groupId },
+      const group = await GroupChat.findOne({
+        where: { id: req.params.groupId },
+        include: [
+          { model: User, as: "users" },
+          {
+            model: GroupMessage,
+            as: "groupMessages",
+            include: [{ model: User, as: "fromUser" }],
+          },
+        ],
       });
-      res.json(messages);
+      res.json(group);
     } catch (err) {
-      console.log(err);
+      console.error(err);
       res.status(500).json(err);
     }
   },

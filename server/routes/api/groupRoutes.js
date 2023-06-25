@@ -3,7 +3,7 @@ const { authMiddleware } = require("../../utils/auth");
 const {
   createGroup,
   createGroupMessage,
-  getGroupMessages,
+  getGroupContents,
   inviteUsers,
   acceptInvitation,
   declineInvitation,
@@ -14,7 +14,7 @@ router.route("/").post(authMiddleware, createGroup);
 router
   .route("/:groupId/messages")
   .post(authMiddleware, createGroupMessage)
-  .get(authMiddleware, getGroupMessages);
+  .get(authMiddleware, getGroupContents);
 
 router.route("/:groupId/invite").post(authMiddleware, inviteUsers);
 
