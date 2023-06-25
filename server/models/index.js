@@ -37,6 +37,16 @@ User.hasMany(Message, {
   onDelete: "CASCADE",
 });
 
+Message.belongsTo(User, {
+  foreignKey: "fromUserId",
+  as: "fromUser",
+});
+
+Message.belongsTo(User, {
+  foreignKey: "toUserId",
+  as: "toUser",
+});
+
 User.belongsToMany(GroupChat, {
   through: GroupUser,
   as: "groups",
