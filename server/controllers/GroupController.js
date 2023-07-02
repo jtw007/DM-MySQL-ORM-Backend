@@ -176,6 +176,37 @@ const groupController = {
       res.status(500).json(err);
     }
   },
+  // Leaving a group
+  leaveGroup: async (req, res) => {
+    try {
+      const { groupId } = req.params;
+
+      // Check if the user is a member of the group
+      const groupUser = await GroupUser.findOne({
+        where: {
+          groupId: groupId,
+          userId: req.user.id,
+          status: "ACCEPTED",
+        },
+      });
+      if (!groupUser) {
+        return res.status(403).json({ message: "Not a group member" });
+      }
+
+      // Delete the user's record from the GroupUser table
+      await GroupUser.destroy({
+        where: {
+          groupId: groupId,
+          userId: req.user.id,
+        },
+      });
+
+      res.json({ message: "Successfully left the group" });
+    } catch (err) {
+      console.error(err);
+      res.status(500).json(err);
+    }
+  },
 };
 
 module.exports = groupController;

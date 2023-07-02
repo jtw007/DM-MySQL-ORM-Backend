@@ -7,6 +7,7 @@ const {
   inviteUsers,
   acceptInvitation,
   declineInvitation,
+  leaveGroup,
 } = require("../../controllers/GroupController");
 
 router.route("/").post(authMiddleware, createGroup);
@@ -25,5 +26,7 @@ router
 router
   .route("/:groupId/invitation/decline")
   .post(authMiddleware, declineInvitation);
+
+router.route("/:groupId/leave").post(authMiddleware, leaveGroup);
 
 module.exports = router;

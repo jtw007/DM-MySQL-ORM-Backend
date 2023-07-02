@@ -16,25 +16,21 @@ User.belongsToMany(User, {
 User.hasMany(FriendRequest, {
   foreignKey: "fromUserId",
   as: "outgoingFriendRequests",
-  onDelete: "CASCADE",
 });
 
 User.hasMany(FriendRequest, {
   foreignKey: "toUserId",
   as: "incomingFriendRequests",
-  onDelete: "CASCADE",
 });
 
 User.hasMany(Message, {
   foreignKey: "fromUserId",
   as: "sendMessages",
-  onDelete: "CASCADE",
 });
 
 User.hasMany(Message, {
   foreignKey: "toUserId",
   as: "receiveMessages",
-  onDelete: "CASCADE",
 });
 
 Message.belongsTo(User, {
