@@ -7,7 +7,7 @@ const FriendController = {
       // Check if the friendship exists
       const friendship = await Friend.findOne({
         where: {
-          userId: req.params.userId,
+          userId: req.user.id,
           friendId: req.params.friendId,
         },
       });
@@ -19,7 +19,7 @@ const FriendController = {
       }
 
       // Find the user who wants to remove a friend
-      const user = await User.findByPk(req.params.userId);
+      const user = await User.findByPk(req.user.id);
 
       // Find the friend who is being removed
       const friend = await User.findByPk(req.params.friendId);
